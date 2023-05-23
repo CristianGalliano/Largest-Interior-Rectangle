@@ -3,7 +3,7 @@
 #include <vector>
 
 // Point structure to hold a 2D points x and y position as well as any functions that will be required.
-struct point
+struct Point
 {
 	// Variable to hold the x position of this 2D point.
 	float x;
@@ -12,29 +12,29 @@ struct point
 	float y;
 
 	// Default constructor.
-	point();
+	Point();
 
 	// Overloaded constructor.
-	point(const float inX, const float inY);
+	Point(const float inX, const float inY);
 
 	// Function to return the squared distance between this point and another.
-	float getSquaredDistance(const point& other) const;
+	float getSquaredDistance(const Point& other) const;
 
 	// Function to return this distance between this point and another.
-	float getDistance(const point& other) const;
+	float getDistance(const Point& other) const;
 
 	// Function to check if this point lies inside a polygon.
-	bool isPointInsidePolygon(const std::vector<point>& polygonPoints) const;
+	bool isPointInsidePolygon(const std::vector<Point>& polygonPoints) const;
 
 	// Operator override function to allow us to add another point to this point.
-	point operator+(const point& other) const;
+	Point operator+(const Point& other) const;
 
 	// Operator override function to allow us to subtract another point from this point.
-	point operator-(const point& other) const;
+	Point operator-(const Point& other) const;
 
 	// Operator override function to allow us to divide this point by a float.
-	point operator/(const float value) const;
+	Point operator/(const float value) const;
 
 	// Operator override function to allow us to check if one point equals another.
-	bool operator==(const point& other) const;
+	bool operator==(const Point& other) const;
 };

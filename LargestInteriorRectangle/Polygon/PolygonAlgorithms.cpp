@@ -5,27 +5,27 @@
 #include <algorithm>
 #include <future>
 
-std::vector<point> getRotatedPolygon(const std::vector<point>& polygonPoints, const point& centerPoint, float angleDegrees)
+std::vector<Point> PolygonAlgorithms::getRotatedPolygon(const std::vector<Point>& polygonPoints, const Point& centerPoint, float angleDegrees)
 {
 	// Conver angle from degrees to radians.
 	float angleRadians = (angleDegrees * M_PI) / 180.0f;
 
 	// Create an array to hold the vertices of the rotated polygon and reserve the desired size.
-	std::vector<point> rotatedPolygonPoints;
+	std::vector<Point> rotatedPolygonPoints;
 	rotatedPolygonPoints.reserve(polygonPoints.size());
 
 	// Loop through all the vertices of the polygon.
-	for (const point& vertex : polygonPoints)
+	for (const Point& vertex : polygonPoints)
 	{
 		// Make the vertex relative to the center point.
-		point translatedPoint = vertex - centerPoint;
+		Point translatedPoint = vertex - centerPoint;
 
 		// Get the sin and cos of the angle.
 		float sinResult = sin(angleRadians);
 		float cosResult = cos(angleRadians);
 
 		// Create the rotated vertex and push it back into the array we created before.
-		point rotatedVertex = point(translatedPoint.x * cosResult - translatedPoint.y * sinResult, translatedPoint.x * sinResult + translatedPoint.y * cosResult);
+		Point rotatedVertex = Point(translatedPoint.x * cosResult - translatedPoint.y * sinResult, translatedPoint.x * sinResult + translatedPoint.y * cosResult);
 		rotatedPolygonPoints.push_back(rotatedVertex + centerPoint);
 	}
 
@@ -33,7 +33,7 @@ std::vector<point> getRotatedPolygon(const std::vector<point>& polygonPoints, co
 	return rotatedPolygonPoints;
 }
 
-float getPerpendicularDistance(const point& targetPoint, const point& lineStart, const point& lineEnd)
+float PolygonAlgorithms::getPerpendicularDistance(const Point& targetPoint, const Point& lineStart, const Point& lineEnd)
 {
 	float dX = lineEnd.x - lineStart.x;
 	float dY = lineEnd.y - lineStart.y;
@@ -59,7 +59,7 @@ float getPerpendicularDistance(const point& targetPoint, const point& lineStart,
 	return pow(pow(aX, 2.0) + pow(aY, 2.0), 0.5);
 }
 
-void simplifyPolygon(const std::vector<point>& polygonPoints, std::vector<point>& outSimplifiedPolygonPoints, const float epsilon)
+void PolygonAlgorithms::simplifyPolygon(const std::vector<Point>& polygonPoints, std::vector<Point>& outSimplifiedPolygonPoints, const float epsilon)
 {
 	if (polygonPoints.size() < 2)
 	{
@@ -81,10 +81,10 @@ void simplifyPolygon(const std::vector<point>& polygonPoints, std::vector<point>
 
 	if (dMax > epsilon)
 	{
-		std::vector<point> recordedResults1;
-		std::vector<point> recordedResults2;
-		std::vector<point> firstLine(polygonPoints.begin(), polygonPoints.begin() + index + 1);
-		std::vector<point> lastLine(polygonPoints.begin() + index, polygonPoints.end());
+		std::vector<Point> recordedResults1;
+		std::vector<Point> recordedResults2;
+		std::vector<Point> firstLine(polygonPoints.begin(), polygonPoints.begin() + index + 1);
+		std::vector<Point> lastLine(polygonPoints.begin() + index, polygonPoints.end());
 		simplifyPolygon(firstLine, recordedResults1, epsilon);
 		simplifyPolygon(lastLine, recordedResults2, epsilon);
 
@@ -104,7 +104,7 @@ void simplifyPolygon(const std::vector<point>& polygonPoints, std::vector<point>
 	}
 }
 
-void calculateInteriorRectangles(const std::vector<point>& polygonPoints, std::vector<rectangle>& outRectangles, std::vector<bool>& outInternalRectangles, int& outGridHeight, int& outGridWidth)
+void PolygonAlgorithms::calculateInteriorRectangles(const std::vector<Point>& polygonPoints, std::vector<Rectangle>& outRectangles, std::vector<bool>& outInternalRectangles, int& outGridHeight, int& outGridWidth)
 {
 	// Create arrays to hold all the unique x and y positions.
 	std::vector<float> xPositions;
@@ -130,7 +130,7 @@ void calculateInteriorRectangles(const std::vector<point>& polygonPoints, std::v
 	sort(yPositions.begin(), yPositions.end());
 
 	// Create an array to hold all the intersections.
-	std::vector<point> intersections;
+	std::vector<Point> intersections;
 
 	// Loop through all the x and y positions.
 	for (int xPositionIndex = 0; xPositionIndex < xPositions.size(); xPositionIndex++)
@@ -138,7 +138,7 @@ void calculateInteriorRectangles(const std::vector<point>& polygonPoints, std::v
 		for (int yPositionIndex = 0; yPositionIndex < yPositions.size(); yPositionIndex++)
 		{
 			// Add the intersection to the array.
-			intersections.push_back(point(xPositions[xPositionIndex], yPositions[yPositionIndex]));
+			intersections.push_back(Point(xPositions[xPositionIndex], yPositions[yPositionIndex]));
 		}
 	}
 
@@ -150,7 +150,7 @@ void calculateInteriorRectangles(const std::vector<point>& polygonPoints, std::v
 	for (int intersectionIndex = 0; intersectionIndex < intersections.size() - (outGridWidth + 1); intersectionIndex++)
 	{
 		// Create a rectangle and push it back into the array of rectangles.
-		rectangle currentRectangle(intersections[intersectionIndex + outGridWidth], intersections[intersectionIndex + 1 + outGridWidth], intersections[intersectionIndex], intersections[intersectionIndex + 1]);
+		Rectangle currentRectangle(intersections[intersectionIndex + outGridWidth], intersections[intersectionIndex + 1 + outGridWidth], intersections[intersectionIndex], intersections[intersectionIndex + 1]);
 		outRectangles.push_back(currentRectangle);
 
 		// Check if all the vertices of the rectangle lye inside the polygon.
@@ -165,10 +165,10 @@ void calculateInteriorRectangles(const std::vector<point>& polygonPoints, std::v
 	}
 }
 
-rectangle calculateLargestInteriorRectangle(const std::vector<point>& polygonPoints)
+Rectangle PolygonAlgorithms::calculateLargestInteriorRectangle(const std::vector<Point>& polygonPoints)
 {
 	// Setup variables for the calculate interior rectangles function.
-	std::vector<rectangle> rectangles;
+	std::vector<Rectangle> rectangles;
 	std::vector<bool> internalRectangles;
 	int gridWidth;
 	int gridHeight;
@@ -177,7 +177,7 @@ rectangle calculateLargestInteriorRectangle(const std::vector<point>& polygonPoi
 	calculateInteriorRectangles(polygonPoints, rectangles, internalRectangles, gridHeight, gridWidth);
 
 	// Create a variable to hold the largest rectangle.
-	rectangle largestRectangle;
+	Rectangle largestRectangle;
 
 	// Loop through all the internal rectangles.
 	for (int internalRectangleIndex = 0; internalRectangleIndex < internalRectangles.size(); internalRectangleIndex++)
@@ -240,11 +240,11 @@ rectangle calculateLargestInteriorRectangle(const std::vector<point>& polygonPoi
 		if (ySpan > 0 && xSpan > 0)
 		{
 			// Create variables for a rectangle.
-			point topLeft = rectangles[internalRectangleIndex + (ySpan * gridWidth)].topLeft;
-			point topRight = rectangles[internalRectangleIndex + xSpan + (ySpan * gridWidth)].topRight;
-			point bottomLeft = rectangles[internalRectangleIndex].bottomLeft;
-			point bottomRight = rectangles[internalRectangleIndex + xSpan].bottomRight;
-			rectangle currentRectangle(topLeft, topRight, bottomLeft, bottomRight);
+			Point topLeft = rectangles[internalRectangleIndex + (ySpan * gridWidth)].topLeft;
+			Point topRight = rectangles[internalRectangleIndex + xSpan + (ySpan * gridWidth)].topRight;
+			Point bottomLeft = rectangles[internalRectangleIndex].bottomLeft;
+			Point bottomRight = rectangles[internalRectangleIndex + xSpan].bottomRight;
+			Rectangle currentRectangle(topLeft, topRight, bottomLeft, bottomRight);
 
 			// Compare the current rectangle to the largest rectangle so far and if the current has a larger aarea set it to be the largest.
 			if (currentRectangle > largestRectangle)
@@ -258,29 +258,29 @@ rectangle calculateLargestInteriorRectangle(const std::vector<point>& polygonPoi
 	return largestRectangle;
 }
 
-rectangle calculateLargestInteriorRectangleWithAngleSweep(const std::vector<point>& polygonPoints, const float deltaRotation, const int numberOfThreads)
+Rectangle PolygonAlgorithms::calculateLargestInteriorRectangleWithAngleSweep(const std::vector<Point>& polygonPoints, const float deltaRotation, const int numberOfThreads)
 {
 	// Calculate the sum of all the points.
-	point pointsSum;
-	for (const point& pointValue : polygonPoints)
+	Point pointsSum;
+	for (const Point& pointValue : polygonPoints)
 	{
 		pointsSum = pointsSum + pointValue;
 	}
 
 	// Get the center point (average) of the polygon.
-	point centerPoint = pointsSum / polygonPoints.size();
+	Point centerPoint = pointsSum / polygonPoints.size();
 
 	// Calculate the number of rotations needed based on the delta rotation.
 	int numberOfRotations = 89 / deltaRotation;
 
 	// Create a variable to hold the largest rectangle found.
-	rectangle largestInteriorRectangle;
+	Rectangle largestInteriorRectangle;
 
 	// Check if we wish to multi-thread.
 	if (numberOfThreads > 1)
 	{
 		// Create an array of futures.
-		std::vector<std::future<rectangle>> futures;
+		std::vector<std::future<Rectangle>> futures;
 
 		// Loop based on how many threads we wish to use.
 		for (int threadIndex = 0; threadIndex < numberOfThreads; threadIndex++)
@@ -294,7 +294,7 @@ rectangle calculateLargestInteriorRectangleWithAngleSweep(const std::vector<poin
 		}
 
 		// Create an array to hold the rectangles found from the futures.
-		std::vector<rectangle> rectangles;
+		std::vector<Rectangle> rectangles;
 
 		// Iterate through all the futures.
 		for (int futureIndex = 0; futureIndex < futures.size(); futureIndex++)
@@ -319,12 +319,12 @@ rectangle calculateLargestInteriorRectangleWithAngleSweep(const std::vector<poin
 	return largestInteriorRectangle;
 }
 
-rectangle calculateLargestInteriorRectangleWithAngleSweepTask(const std::vector<point>& polygonPoints, const float deltaRotation, const int startIndex, const int endIndex, const point& centerPoint)
+Rectangle PolygonAlgorithms::calculateLargestInteriorRectangleWithAngleSweepTask(const std::vector<Point>& polygonPoints, const float deltaRotation, const int startIndex, const int endIndex, const Point& centerPoint)
 {
 	// Create variables to be used in iteration.
-	std::vector<point> rotatedPolygonPoints;
-	rectangle largestInteriorRectangle;
-	rectangle currentRectangle;
+	std::vector<Point> rotatedPolygonPoints;
+	Rectangle largestInteriorRectangle;
+	Rectangle currentRectangle;
 
 	// Loop from start to end index.
 	for (int currentIndex = startIndex; currentIndex < endIndex; currentIndex++)

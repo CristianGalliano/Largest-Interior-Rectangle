@@ -4,23 +4,23 @@
 #include <iostream>
 
 // Create an array of points to be used for testing.
-const std::vector<point> testPolygon = { point(0.0f, 0.0f), point(2.3f, 2.7f), point(4.1f, 1.9f), point(6.4f, 3.2f), point(8.9f, 1.5f), point(10.2f, 4.6f),
-										 point(9.7f, 7.3f), point(12.8f, 6.4f), point(14.5f, 8.2f), point(12.7f, 10.9f), point(14.3f, 12.1f), point(11.9f, 14.4f), point(9.6f, 12.8f),
-										 point(6.2f, 14.9f), point(5.4f, 12.3f), point(2.6f, 13.7f), point(1.1f, 10.6f), point(3.9f, 8.5f), point(1.3f, 6.1f), point(3.7f, 4.3f) };
+const std::vector<Point> testPolygon = { Point(0.0f, 0.0f), Point(2.3f, 2.7f), Point(4.1f, 1.9f), Point(6.4f, 3.2f), Point(8.9f, 1.5f), Point(10.2f, 4.6f),
+										 Point(9.7f, 7.3f), Point(12.8f, 6.4f), Point(14.5f, 8.2f), Point(12.7f, 10.9f), Point(14.3f, 12.1f), Point(11.9f, 14.4f), Point(9.6f, 12.8f),
+										 Point(6.2f, 14.9f), Point(5.4f, 12.3f), Point(2.6f, 13.7f), Point(1.1f, 10.6f), Point(3.9f, 8.5f), Point(1.3f, 6.1f), Point(3.7f, 4.3f) };
 
 void simplifyPolygonTest()
 {
 	// Variable to hold the simplified polygon.
-	std::vector<point> simplifiedTestPolygon;
+	std::vector<Point> simplifiedTestPolygon;
 
 	// Call simplify polygon function from the polygon algorithms library.
-	simplifyPolygon(testPolygon, simplifiedTestPolygon);
+	PolygonAlgorithms::simplifyPolygon(testPolygon, simplifiedTestPolygon);
 
 	// Output test polygon points to the console.
 	std::cout << "Test Polygon" << "\n";
 	std::cout << "------------" << "\n";
 
-	for (const point& testPolygonPoint : testPolygon)
+	for (const Point& testPolygonPoint : testPolygon)
 	{
 		std::cout << "(" << testPolygonPoint.x << ", " << testPolygonPoint.y << "), ";
 	}
@@ -31,7 +31,7 @@ void simplifyPolygonTest()
 	std::cout << "Simplified Polygon" << "\n";
 	std::cout << "------------------" << "\n";
 
-	for (const point& simplifiedPolygonPoint : simplifiedTestPolygon)
+	for (const Point& simplifiedPolygonPoint : simplifiedTestPolygon)
 	{
 		std::cout << "(" << simplifiedPolygonPoint.x << ", " << simplifiedPolygonPoint.y << "), ";
 	}
@@ -42,7 +42,7 @@ void simplifyPolygonTest()
 void calculateLargestInteriorRectangleTest()
 {
 	// Variable to hold the largest interior rectangle.
-	rectangle largestInterioRectangle = calculateLargestInteriorRectangle(testPolygon);
+	Rectangle largestInterioRectangle = PolygonAlgorithms::calculateLargestInteriorRectangle(testPolygon);
 
 	// Output the vertices and values of the largest interior rectangle to the console.
 	std::cout << "Largest Interior Rectangle" << "\n";
@@ -62,7 +62,7 @@ void calculateLargestInteriorRectangleTest()
 void calculateLargestInteriorRectangleWithAngleSweepTest()
 {
 	// Variable to hold the largest interior rectangle.
-	rectangle largestInterioRectangle = calculateLargestInteriorRectangleWithAngleSweep(testPolygon);
+	Rectangle largestInterioRectangle = PolygonAlgorithms::calculateLargestInteriorRectangleWithAngleSweep(testPolygon);
 
 	// Output the vertices and values of the largest interior rectangle to the console.
 	std::cout << "Largest Interior Rectangle With Angle Sweep" << "\n";
